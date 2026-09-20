@@ -1,19 +1,40 @@
 name: Build
-on: [push]
+
+on:
+  push:
+    branches: [ main ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
         with:
-          distribution: temurin
+          distribution: 'temurin'
           java-version: 17
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
-      - name: Build
+      - name: Build OtakusTV
         run: gradle :FaridExtensions:make --stacktrace
-      - uses: actions/upload-artifact@v4
+      - name: Deploy to builds branch
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          mkdir -p /tmp/builds
+          cp FaridExtensions/build/*.cs3 /tmp/builds/ 2>/dev/null || true
+          echo '{"name":"AFCV444 - Farid","plugins":[{"name":"OtakusTV","url":"https://raw.githubusercontent.com/angelfarid2009-art/AFCV444/builds/OtakusTV.cs3","version":1}]}' > /tmp/builds/repo.json
+          git checkout --orphan builds
+          git rm -rf .
+          cp /tmp/builds/* .
+          git add .
+          git commit -m "deploy"
+          git push -f origin builds
+      - name: Upload cs3
+        uses: actions/upload-artifact@v4
         with:
-          name: cs3
+          name: OtakusTV-cs3
           path: FaridExtensions/build/*.cs3
