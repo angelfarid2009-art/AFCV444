@@ -1,28 +1,26 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("com.github.recloudstream.gradle") version "0.0.1"
 }
-
 android {
-    namespace = "com.example"
     compileSdk = 34
+    namespace = "com.farid.otakustv"
     defaultConfig { minSdk = 21 }
     compileOptions {
-        sourceCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
-        targetCompatibility = org.gradle.api.JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions { jvmTarget = "1.8" }
 }
-
-csExtension {
-    name = "FaridExtensions"
-    description = "Repo Farid - HenaoJara arreglado + OtakusTV"
-    authors = listOf("Farid")
-    lang = "es"
-    version = 1
-}
 dependencies {
-    implementation("com.github.Blatzar:NiceHttp:0.4.11")
-    implementation("org.jsoup:jsoup:1.17.1")
+    compileOnly("com.github.recloudstream:cloudstream:master-SNAPSHOT")
+}
+tasks.register("make") {
+    dependsOn("assembleDebug")
+    doLast {
+        val jarFile = file("build/intermediates/aar_main_jar/debug/classes.jar")
+        val outFile = file("build/OtakusTV.cs3")
+        outFile.parentFile.mkdirs()
+        if (jarFile.exists()) jarFile.copyTo(outFile, overwrite = true)
+    }
 }
