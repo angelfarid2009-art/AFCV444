@@ -9,10 +9,10 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-      - name: Build Plugin
-        run: |
-          chmod +x gradlew
-         ./gradlew make --stacktrace
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+      - name: Build
+        run: gradle :FaridExtensions:make --stacktrace
       - uses: actions/upload-artifact@v4
         with:
           name: cs3
