@@ -1,0 +1,40 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Make gradlew executable
+        run: chmod +x./gradlew
+
+      - name: Build Plugins
+        run:./gradlew makePlugins
+
+      - name: Deploy to builds branch
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git checkout --orphan builds
+          git rm -rf.
+          cp -r build/plugins/*. || true
+          if [ -f build/repo.json ]; then cp build/repo.json repo.json; fi
+          git add.
+          git commit -m "Deploy plugins" || exit 0
+          git push -f origin builds
