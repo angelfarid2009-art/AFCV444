@@ -1,0 +1,31 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+      - name: Build Plugins
+        run: ./gradlew makePlugins --stacktrace
+      - name: Deploy to builds
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "github-actions"
+          git checkout --orphan builds
+          git rm -rf .
+          cp -r build/. .
+          git add .
+          git commit -m "Deploy" || exit 0
+          git push -f origin builds
