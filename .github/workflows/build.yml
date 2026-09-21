@@ -12,10 +12,11 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
+      - uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: 8.5
       - name: Build Plugins
-        run: ./gradlew makePlugins
+        run: gradle makePlugins
       - name: Deploy to builds branch
         run: |
           git config --global user.email "actions@github.com"
