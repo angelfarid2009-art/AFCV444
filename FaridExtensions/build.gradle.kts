@@ -5,4 +5,7 @@ cloudstream {
 android {
     compileSdk = 34
     namespace = "com.farid"
+    defaultConfig {
+        minSdk = 21
+    }
 }
