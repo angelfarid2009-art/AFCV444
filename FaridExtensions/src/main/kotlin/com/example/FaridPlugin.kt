@@ -7,5 +7,6 @@ import com.lagradost.cloudstream3.plugins.Plugin
 class FaridPlugin: Plugin() {
     override fun load() {
         registerMainAPI(OtakusTVProvider())
+        registerMainAPI(HenaoJaraProvider())
     }
 }
