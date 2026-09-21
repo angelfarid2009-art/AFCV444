@@ -1,13 +1,19 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.2.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
+    }
+}
+
 plugins {
-    id("com.lagradost.cloudstream3.gradle") version "0.6.2"
+    id("com.lagradost.cloudstream3.gradle") version "0.6.2" apply false
 }
 
-cloudstream {
-    language = "es"
-    authors = listOf("Farid")
-    description = "Plugin de Farid"
-}
-
-android {
-    namespace = "com.farid.afcv444"
+tasks.register("makePlugins") {
+    dependsOn(subprojects.map { ":${it.name}:make" })
 }
