@@ -1,17 +1,9 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
+rootProject.name = "AFCV444"
+
+file(rootDir).listFiles()?.forEach { dir ->
+    if (dir.isDirectory && File(dir, "build.gradle.kts").exists()) {
+        if (dir.name != "buildSrc") {
+            include(":${dir.name}")
+        }
     }
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
-    }
-}
-include(":FaridExtensions")
