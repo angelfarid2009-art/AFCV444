@@ -10,6 +10,18 @@ buildscript {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
     }
 }
+
+subprojects {
+    apply(plugin = "com.android.library")
+    apply(plugin = "kotlin-android")
+    apply(plugin = "com.lagradost.cloudstream3.gradle")
+
+    dependencies {
+        val cloudstream by configurations
+        cloudstream("com.lagradost:cloudstream3:pre-release")
+    }
+}
+
 tasks.register("makePlugins") {
     dependsOn(subprojects.map { ":${it.name}:make" })
 }
