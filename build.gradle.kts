@@ -1,18 +1,9 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.2.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10")
-    }
-}
+rootProject.name = "AFCV444"
 
-plugins {
-    id("com.lagradost.cloudstream3.gradle") version "0.6.2" apply false
-}
-
-tasks.register("makePlugins") {
-    dependsOn(subprojects.map { ":${it.name}:make" })
+file(rootDir).listFiles()?.forEach { dir ->
+    if (dir.isDirectory && File(dir, "build.gradle.kts").exists()) {
+        if (dir.name != "buildSrc") {
+            include(":${dir.name}")
+        }
+    }
 }
