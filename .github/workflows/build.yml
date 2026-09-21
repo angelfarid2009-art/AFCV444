@@ -1,8 +1,7 @@
 name: Build
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,18 +11,19 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - uses: gradle/gradle-build-action@v2
+      - name: Build plugins
+        uses: gradle/gradle-build-action@v2
         with:
           gradle-version: 8.5
-      - name: Build Plugins
-        run: gradle makePlugins
+          cache-disabled: true
+          arguments: makePlugins
       - name: Deploy to builds branch
         run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
           git checkout --orphan builds
-          git rm -rf .
-          cp -r build/. .
-          git add .
-          git commit -m "Build"
+          git rm -rf. || true
+          cp -r build/.. || true
+          git add.
+          git commit -m "Build" || true
           git push -f origin builds
