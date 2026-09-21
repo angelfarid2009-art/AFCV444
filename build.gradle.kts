@@ -16,13 +16,13 @@ subprojects {
     apply(plugin = "kotlin-android")
     apply(plugin = "com.lagradost.cloudstream3.gradle")
     
-    // ESTO ES LO QUE TE BLINDA
-    extensions.findByName("android")?.let {
-        (it as com.android.build.gradle.LibraryExtension).apply {
-            compileSdk = 34
-            defaultConfig {
-                minSdk = 21
-            }
+    // ESTO ES LO QUE YA TE VA A FORZAR EL NAMESPACE Y EL SDK
+    val android = extensions.findByName("android") as? com.android.build.gradle.LibraryExtension
+    android?.apply {
+        compileSdk = 34
+        namespace = "com.farid"
+        defaultConfig {
+            minSdk = 21
         }
     }
 
